@@ -51,7 +51,7 @@ public class NewBehaviourScript : MonoBehaviour
                     spriteRenderer.flipX = false;
                 }
 
-        if(Input.GetKey(KeyCode.Space) && noChao == true)
+        if(Input.GetKeyDown(KeyCode.Space) && noChao == true)
         {
             _rigidbody2D.AddForce(new Vector2(0, 1) * forcapulo, ForceMode2D.Impulse);
             Debug.Log("Space");
