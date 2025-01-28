@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public bool noChao = false;
@@ -55,6 +55,19 @@ public class Player : MonoBehaviour
         {
             _rigidbody2D.AddForce(new Vector2(0, 1) * forcapulo, ForceMode2D.Impulse);
             Debug.Log("Space");
+        }
+
+         //resetar por circunstâmcia
+        if(transform.position.y <= - 15)
+        {
+            //jogador caiu
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        else if(Input.GetKeyDown(KeyCode.R))
+        {
+            //jogador apertou R
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
