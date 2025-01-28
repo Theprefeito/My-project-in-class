@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class Player : MonoBehaviour
 {
     public bool noChao = false;
     public float velocidade = 10.09f;                                                                                                                                          
