@@ -1,23 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerV2DashCD : MonoBehaviour
 {
+    public float forcapulo = 10f;
     public float moveSpeed = 5f;         // Velocidade normal de movimento
     public float dashSpeed = 15f;        // Velocidade do dash
     public float dashDuration = 0.2f;    // Duração do dash
+    public float dashCooldown = 1f;      // Tempo de cooldown entre os dashes
+    public int maxDashes = 1;            // Número máximo de dashes permitidos
 
-    public float forcapulo = 10f;
+    private int currentDashes = 0;       // Contador de dashes realizados
+    private float dashTime = 0f;         // Contador de tempo do dash
+    private float dashCooldownTime = 0f; // Contador de cooldown
+    private bool isDashing = false;      // Verifica se o jogador está em dash
+    private bool canDash = true;         // Verifica se o jogador pode realizar o próximo dash
 
     private SpriteRenderer spriteRenderer;
 
     public bool noChao = false;
-    private float dashTime = 0f;         // Contador de tempo do dash
-    private bool isDashing = false;      // Verifica se o jogador está em dash
-
     private Rigidbody2D rb;              // Referência ao Rigidbody2D do jogador
     private Vector2 moveDirection;       // Direção do movimento normal
     private Vector2 dashDirection;       // Direção do dash
@@ -28,25 +31,36 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
- void OnCollisionStay2D(Collision2D collision)
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "chao")
         {
-                if(collision.gameObject.tag == "chao")
-                {
-                    noChao = true;
-                }    
-        }
+            noChao = true;
+        }    
+    }
+
     void OnCollisionExit2D(Collision2D collision)
     {
-            if(collision.gameObject.tag == "chao")
-            {
-                noChao = false;
-            }    
+        if(collision.gameObject.tag == "chao")
+        {
+            noChao = false;
+        }    
     }
 
     void Update()
     {
+        // Verifica cooldown para o dash
+        if (!canDash)
+        {
+            dashCooldownTime -= Time.deltaTime;
+            if (dashCooldownTime <= 0f)
+            {
+                canDash = true; // O jogador pode realizar outro dash
+            }
+        }
+
         // Detecta se o botão de dash (ex: "Fire1") foi pressionado
-        if(Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && canDash && currentDashes < maxDashes)
         {
             Dash();
         }
@@ -58,23 +72,25 @@ public class PlayerController : MonoBehaviour
             if (dashTime <= 0f)
             {
                 isDashing = false; // Termina o dash
+                currentDashes++;   // Incrementa o número de dashes realizados
+                canDash = false;   // Inicia o cooldown
+                dashCooldownTime = dashCooldown; // Reseta o tempo de cooldown
             }
         }
-
 
         // Armazena a direção de movimento (horizontal e vertical)
         moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         UpdateSpriteDirection();
 
-         if(Input.GetKeyDown(KeyCode.C) && noChao == true)
+        if (Input.GetKeyDown(KeyCode.C) && noChao == true)
         {
             rb.AddForce(new Vector2(0, 1) * forcapulo, ForceMode2D.Impulse);
             Debug.Log("C");
         }
 
-          //resetar por circunstâmcia
-        if(transform.position.y <= - 15)
+        //resetar por circunstância
+        if (transform.position.y <= - 15)
         {
             //jogador caiu
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -114,7 +130,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-      void UpdateSpriteDirection()
+    void UpdateSpriteDirection()
     {
         // Se o movimento é para a direita, vira o sprite para a direita
         // Se o movimento é para a esquerda, vira o sprite para a esquerda
@@ -128,3 +144,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+
