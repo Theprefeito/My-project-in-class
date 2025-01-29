@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
                     spriteRenderer.flipX = false;
                 }
 
-        if(Input.GetKeyDown(KeyCode.Space) && noChao == true)
+        if(Input.GetKeyDown(KeyCode.C) && noChao == true)
         {
             _rigidbody2D.AddForce(new Vector2(0, 1) * forcapulo, ForceMode2D.Impulse);
             Debug.Log("Space");
@@ -64,10 +65,10 @@ public class Player : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        else if(Input.GetKeyDown(KeyCode.R))
+      /*  else if(Input.GetKeyDown(KeyCode.R))
         {
             //jogador apertou R
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
+        }*/
     }
 }
