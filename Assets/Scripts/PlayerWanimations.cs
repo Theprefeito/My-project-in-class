@@ -46,7 +46,12 @@ public class PlayerWanimations : MonoBehaviour
     {
         
             andando = false;
-        
+            
+            
+            _animator.SetBool("IsJump", !noChao); 
+
+
+
       if(Input.GetKey(KeyCode.LeftArrow))
       {
             gameObject.transform.position += new Vector3(-velocidade*Time.deltaTime,0,0);
@@ -77,8 +82,7 @@ public class PlayerWanimations : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && noChao == true)
         {
             _rigidbody2D.AddForce(new Vector2(0, 1) * focaPulo,ForceMode2D.Impulse);
-            _animator.SetTrigger ("Jump");
-
+            
             Debug.Log("Jump");
         }
         
